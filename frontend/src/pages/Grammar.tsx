@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Clock, MessageSquare, Award, Target } from 'lucide-react';
+import { Search, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Clock, MessageSquare, Award, Target, ArrowLeft, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { grammarData, GrammarCategory, GrammarRule } from '../data/grammarData';
 import { analyzeInput, AIAnalysisResult } from '../utils/aiBarista';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const Grammar: React.FC = () => {
+  const isMobile = useIsMobile();
   const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>(grammarData[0].id);
   const [selectedRuleId, setSelectedRuleId] = useState<string>(grammarData[0].items[0].id);
   const [searchQuery, setSearchQuery] = useState('');
   
+  // Mobile View State
+  const [mobileView, setMobileView] = useState<'list' | 'detail'>('list');
+  const [isPracticeOpen, setIsPracticeOpen] = useState(false);
+
   // Practice State
   const [practiceInput, setPracticeInput] = useState('');
   const [feedback, setFeedback] = useState<AIAnalysisResult | null>(null);
@@ -68,11 +74,26 @@ const Grammar: React.FC = () => {
     }, 800);
   };
 
+  // Handle mobile view transitions
+  useEffect(() => {
+    if (!isMobile) {
+      setMobileView('list'); // Reset or irrelevant
+      setIsPracticeOpen(false);
+    }
+  }, [isMobile]);
+
+  const handleRuleSelect = (ruleId: string) => {
+    setSelectedRuleId(ruleId);
+    if (isMobile) {
+      setMobileView('detail');
+    }
+  };
+
   // Helper to render sidebar items
   const renderSidebarItem = (item: GrammarRule) => (
     <button
       key={item.id}
-      onClick={() => setSelectedRuleId(item.id)}
+      onClick={() => handleRuleSelect(item.id)}
       className={clsx(
         "w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-all group text-left",
         selectedRuleId === item.id
@@ -81,7 +102,8 @@ const Grammar: React.FC = () => {
       )}
     >
       <span className="truncate pr-2">{item.title}</span>
-      {selectedRuleId === item.id && <ChevronRight className="w-3 h-3 text-amber-600 flex-shrink-0" />}
+      {selectedRuleId === item.id && !isMobile && <ChevronRight className="w-3 h-3 text-amber-600 flex-shrink-0" />}
+      {isMobile && <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />}
     </button>
   );
 
@@ -95,10 +117,179 @@ const Grammar: React.FC = () => {
     }
   };
 
+  if (isMobile) {
+    // --- Mobile Layout ---
+    return (
+      <div className="h-full flex flex-col">
+        {mobileView === 'list' ? (
+          <div className="flex-1 overflow-hidden flex flex-col space-y-4">
+            {/* Mobile Search Header */}
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="搜索语法点..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-3 text-sm bg-white border border-amber-200 rounded-xl shadow-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+              />
+            </div>
+
+            {/* Mobile Category List */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar pb-20">
+              {grammarData.map((category) => (
+                <div key={category.id} className="mb-4 bg-white rounded-xl shadow-sm border border-amber-100 overflow-hidden">
+                  <div 
+                    className="px-4 py-3 bg-amber-50/50 border-b border-amber-100 flex items-center gap-2 font-bold text-gray-700"
+                    onClick={() => setSelectedCategory(category.id)}
+                  >
+                    {getCategoryIcon(category.id)}
+                    {category.name}
+                  </div>
+                  <div className="p-2 space-y-1">
+                     {category.items
+                      .filter(item => !searchQuery || item.title.includes(searchQuery) || item.summary.includes(searchQuery))
+                      .map(item => renderSidebarItem(item))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 flex flex-col overflow-hidden bg-white rounded-xl shadow-sm border border-amber-100 relative">
+            {/* Mobile Detail Header */}
+            <div className="flex items-center gap-3 p-4 border-b border-amber-100 sticky top-0 bg-white/95 backdrop-blur z-10">
+              <button 
+                onClick={() => setMobileView('list')}
+                className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5 text-gray-600" />
+              </button>
+              <div className="flex-1 min-w-0">
+                <h2 className="font-bold text-gray-900 truncate">{currentRule.title}</h2>
+                <p className="text-xs text-gray-500 truncate">{currentCategory.name}</p>
+              </div>
+              <button
+                onClick={() => setIsPracticeOpen(true)}
+                className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-xs font-bold"
+              >
+                练习
+              </button>
+            </div>
+
+            {/* Mobile Detail Content */}
+            <div className="flex-1 overflow-y-auto p-4 custom-scrollbar pb-20">
+               <div className="prose prose-amber max-w-none prose-sm">
+                  <div className="bg-amber-50 rounded-lg p-4 mb-6 border border-amber-100">
+                    <p className="text-lg font-mono text-gray-900 font-bold text-center">
+                      {currentRule.structure}
+                    </p>
+                  </div>
+
+                  <p className="text-gray-700 leading-relaxed mb-6">
+                    {currentRule.description}
+                  </p>
+
+                  {currentRule.usageNotes && (
+                    <div className="mb-6">
+                      <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2 text-sm">
+                        <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+                        使用注意
+                      </h3>
+                      <ul className="list-disc list-inside text-gray-600 text-sm space-y-1 bg-gray-50 p-3 rounded-lg">
+                        {currentRule.usageNotes.map((note, idx) => (
+                          <li key={idx}>{note}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm">
+                      <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+                      例句
+                    </h3>
+                    <div className="space-y-3">
+                      {currentRule.examples.map((ex, idx) => (
+                        <div key={idx} className="p-3 border border-gray-100 rounded-lg bg-gray-50/50">
+                          <p className="font-medium text-gray-900 mb-1">{ex.kr}</p>
+                          <p className="text-xs text-gray-500">{ex.cn}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+               </div>
+            </div>
+
+            {/* Mobile Practice Modal (Overlay) */}
+            {isPracticeOpen && (
+              <div className="absolute inset-0 z-50 bg-white flex flex-col animate-in slide-in-from-bottom-full duration-200">
+                <div className="flex items-center justify-between p-4 border-b border-gray-100">
+                  <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-amber-600" />
+                    即时练习
+                  </h3>
+                  <button onClick={() => setIsPracticeOpen(false)} className="p-2 bg-gray-100 rounded-full">
+                    <X className="w-4 h-4 text-gray-500" />
+                  </button>
+                </div>
+                <div className="flex-1 p-4 overflow-y-auto">
+                   <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 text-sm text-blue-800 mb-4">
+                      <p className="font-bold mb-2">
+                        {selectedCategory === 'alphabet' ? '拼写挑战' : '翻译挑战'}
+                      </p>
+                      <p className="text-lg text-blue-900 font-medium">
+                        {currentChallenge?.cn}
+                      </p>
+                    </div>
+                    <textarea 
+                      value={practiceInput}
+                      onChange={(e) => setPracticeInput(e.target.value)}
+                      className="w-full h-32 p-4 text-base border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none resize-none mb-4"
+                      placeholder="在此输入韩文..."
+                    ></textarea>
+                    <button 
+                      onClick={handlePracticeSubmit}
+                      disabled={isSubmitting || !practiceInput.trim()}
+                      className="w-full py-3 bg-gray-900 text-white rounded-xl font-bold shadow-lg"
+                    >
+                      {isSubmitting ? 'AI 正在品鉴...' : '提交'}
+                    </button>
+                    
+                    {feedback && (
+                      <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                         <div className={clsx(
+                            "font-bold mb-2 flex items-center gap-2",
+                            feedback.score >= 90 ? "text-green-600" : "text-amber-600"
+                          )}>
+                            {feedback.score >= 90 ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                            准确度: {feedback.score}%
+                          </div>
+                          <p className="text-sm text-gray-700 mb-2">{feedback.feedback}</p>
+                          {feedback.corrections.length > 0 && (
+                            <div className="space-y-2 mt-3 pt-3 border-t border-gray-200">
+                              {feedback.corrections.map((c, i) => (
+                                <div key={i} className="text-xs bg-white p-2 rounded border border-red-100">
+                                  <span className="text-red-500 font-bold">[{c.type}]</span> {c.explanation}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                      </div>
+                    )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="h-[calc(100vh-8rem)] flex gap-6">
+    <div className="flex flex-col md:flex-row gap-6 md:h-[calc(100vh-8rem)]">
       {/* Sidebar Navigation */}
-      <div className="w-72 bg-white rounded-xl shadow-sm border border-amber-100 flex flex-col overflow-hidden">
+      <div className="w-full md:w-64 bg-white rounded-xl shadow-sm border border-amber-100 flex flex-col overflow-hidden shrink-0 h-64 md:h-auto">
         <div className="p-4 border-b border-amber-100 bg-amber-50/50">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -137,7 +328,7 @@ const Grammar: React.FC = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 bg-white rounded-xl shadow-sm border border-amber-100 overflow-y-auto p-8 custom-scrollbar">
+      <div className="flex-1 bg-white rounded-xl shadow-sm border border-amber-100 overflow-y-auto p-6 md:p-8 custom-scrollbar h-[calc(100vh-20rem)] md:h-auto">
         <div className="max-w-3xl mx-auto animate-fadeIn">
           <div className="mb-6 flex items-center gap-3">
             <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold tracking-wide">
@@ -205,7 +396,7 @@ const Grammar: React.FC = () => {
       </div>
 
       {/* Practice Panel (Right Side) */}
-      <div className="w-80 bg-white rounded-xl shadow-sm border border-amber-100 flex flex-col">
+      <div className="w-full md:w-64 bg-white rounded-xl shadow-sm border border-amber-100 flex flex-col shrink-0">
         <div className="p-4 border-b border-amber-100 bg-amber-50/30 rounded-t-xl">
           <h3 className="font-bold text-gray-900 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-amber-600" />

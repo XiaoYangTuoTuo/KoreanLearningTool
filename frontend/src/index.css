@@ -13,6 +13,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 /* Custom Scrollbar for 'custom-scrollbar' class */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
@@ -30,4 +35,25 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #fabe54; /* amber-400 */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Safe area padding */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom); /* iOS 11.0 */
+  padding-bottom: env(safe-area-inset-bottom); /* iOS 11.2 */
 }

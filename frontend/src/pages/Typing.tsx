@@ -6,6 +6,7 @@ import { sentenceData, Sentence, genres } from '../data/sentenceData';
 import { useUserStore } from '../store/useStore';
 import { analyzeInput, AIAnalysisResult } from '../utils/aiBarista';
 import confetti from 'canvas-confetti';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 type TypingState = 'ordering' | 'brewing' | 'tasting' | 'receipt';
 
@@ -254,34 +255,34 @@ const Typing: React.FC = () => {
 
   if (state === 'ordering') {
     return (
-      <div className="max-w-5xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-sm border border-amber-100 p-8 md:p-12">
-          <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">今天想喝点什么？</h1>
-            <p className="text-gray-600">请选择您的口味，AI 咖啡师将为您现磨专属练习文本。</p>
+      <div className="max-w-5xl mx-auto pb-20">
+        <div className="bg-white rounded-2xl shadow-sm border border-amber-100 p-6 md:p-12">
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-4">今天想喝点什么？</h1>
+            <p className="text-gray-600 text-sm md:text-base">请选择您的口味，AI 咖啡师将为您现磨专属练习文本。</p>
           </div>
 
-          <div className="space-y-10">
+          <div className="space-y-8 md:space-y-10">
             {/* Genre Selection */}
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-sm">1</span>
                 选择咖啡豆 (题材)
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                 {genres.map((genre) => (
                   <button
                     key={genre.id}
                     onClick={() => setSelectedMenu(prev => ({ ...prev, genre: genre.id, difficulty: prev?.difficulty || '' }))}
                     className={clsx(
-                      "p-4 rounded-xl border-2 text-left transition-all relative overflow-hidden group",
+                      "p-3 md:p-4 rounded-xl border-2 text-left transition-all relative overflow-hidden group",
                       selectedMenu?.genre === genre.id
                         ? "border-amber-500 bg-amber-50 ring-1 ring-amber-500"
                         : "border-gray-100 hover:border-amber-200 hover:bg-gray-50"
                     )}
                   >
-                    <div className="relative z-10">
-                      <div className="font-bold text-gray-900 mb-1 group-hover:text-amber-700 transition-colors">{genre.name}</div>
+                    <div className="relative z-10 flex items-center justify-between md:block">
+                      <div className="font-bold text-gray-900 mb-0 md:mb-1 group-hover:text-amber-700 transition-colors">{genre.name}</div>
                       <div className="text-xs text-gray-500">{genre.desc}</div>
                     </div>
                   </button>
@@ -295,20 +296,22 @@ const Typing: React.FC = () => {
                 <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-sm">2</span>
                 选择甜度 (难度)
               </h3>
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                 {difficulties.map((diff) => (
                   <button
                     key={diff.id}
                     onClick={() => setSelectedMenu(prev => ({ ...prev, genre: prev?.genre || '', difficulty: diff.id }))}
                     className={clsx(
-                      "p-4 rounded-xl border-2 text-left transition-all",
+                      "p-3 md:p-4 rounded-xl border-2 text-left transition-all",
                       selectedMenu?.difficulty === diff.id
                         ? "border-amber-500 bg-amber-50 ring-1 ring-amber-500"
                         : "border-gray-100 hover:border-amber-200 hover:bg-gray-50"
                     )}
                   >
-                    <div className="font-bold text-gray-900 mb-1">{diff.name}</div>
-                    <div className="text-xs text-gray-500">{diff.desc}</div>
+                    <div className="flex items-center justify-between md:block">
+                      <div className="font-bold text-gray-900 mb-0 md:mb-1">{diff.name}</div>
+                      <div className="text-xs text-gray-500">{diff.desc}</div>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -326,24 +329,24 @@ const Typing: React.FC = () => {
                     key={count}
                     onClick={() => setTargetCount(count)}
                     className={clsx(
-                      "p-4 rounded-xl border-2 text-center transition-all",
+                      "p-3 md:p-4 rounded-xl border-2 text-center transition-all",
                       targetCount === count
                         ? "border-amber-500 bg-amber-50 ring-1 ring-amber-500"
                         : "border-gray-100 hover:border-amber-200 hover:bg-gray-50"
                     )}
                   >
-                    <div className="font-bold text-gray-900">{count}</div>
-                    <div className="text-xs text-gray-500">句</div>
+                    <div className="font-bold text-gray-900 text-sm md:text-base">{count}</div>
+                    <div className="text-[10px] md:text-xs text-gray-500">句</div>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="pt-8 text-center">
+            <div className="pt-8 text-center sticky bottom-4 z-20 md:static">
               <button
                 disabled={!selectedMenu?.genre || !selectedMenu?.difficulty}
                 onClick={handleOrder}
-                className="inline-flex items-center px-8 py-4 bg-gray-900 text-white rounded-full font-bold text-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-gray-200 transform hover:-translate-y-1"
+                className="w-full md:w-auto inline-flex items-center justify-center px-8 py-4 bg-gray-900 text-white rounded-full font-bold text-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-gray-200 transform hover:-translate-y-1"
               >
                 <Coffee className="w-5 h-5 mr-2" />
                 确认点单
@@ -478,7 +481,7 @@ const Typing: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Stats Header */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded-xl shadow-sm border border-amber-100 flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500 mb-1">当前进度</p>
@@ -511,7 +514,7 @@ const Typing: React.FC = () => {
       </div>
 
       {/* Typing Area */}
-      <div className="bg-white rounded-2xl shadow-sm border border-amber-100 p-8 md:p-12 text-center relative overflow-hidden min-h-[400px] flex flex-col justify-center">
+      <div className="bg-white rounded-2xl shadow-sm border border-amber-100 p-6 md:p-12 text-center relative overflow-hidden min-h-[400px] flex flex-col justify-center">
         <div className="absolute top-0 left-0 w-full h-2 bg-amber-500"></div>
         
         <div className="mb-8 relative z-10">

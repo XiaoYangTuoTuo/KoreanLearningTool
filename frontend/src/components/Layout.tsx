@@ -127,18 +127,37 @@ const Layout: React.FC = () => {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-20 sm:mb-0">
         <Outlet />
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-auto">
+      <footer className="bg-white border-t border-gray-200 mt-auto hidden sm:block">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-gray-500">
             &copy; 2025 Korean Learning Tool. Designed for Students. Developed by 羊驼.
           </p>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 flex justify-around items-center h-16 pb-safe">
+        {navItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={clsx(
+              'flex flex-col items-center justify-center w-full h-full space-y-1',
+              location.pathname === item.path
+                ? 'text-amber-600'
+                : 'text-gray-500 hover:text-gray-900'
+            )}
+          >
+            <item.icon className="w-5 h-5" />
+            <span className="text-[10px] font-medium">{item.label}</span>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

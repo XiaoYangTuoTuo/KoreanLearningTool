@@ -135,7 +135,7 @@ const Profile: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* User Info Header (Member Card Style) */}
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8 text-amber-50 shadow-xl border border-gray-700 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-6 md:p-8 text-amber-50 shadow-xl border border-gray-700 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500 rounded-full blur-3xl opacity-10 -translate-y-1/2 translate-x-1/2"></div>
         
         <div className="relative z-10">
@@ -213,7 +213,7 @@ const Profile: React.FC = () => {
         <button
           onClick={() => setActiveTab('history')}
           className={clsx(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2",
+            "px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap",
             activeTab === 'history' ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-900"
           )}
         >

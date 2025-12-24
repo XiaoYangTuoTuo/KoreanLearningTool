@@ -5,6 +5,7 @@ import { traeBadgePlugin } from 'vite-plugin-trae-solo-badge';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './', // 关键配置：确保资源路径为相对路径，适配 Gitee Pages 非根目录部署
   build: {
     sourcemap: 'hidden',
   },

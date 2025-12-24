@@ -1,29 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Coffee, Book, ArrowRight, Star, Clock, Sparkles } from 'lucide-react';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const Home: React.FC = () => {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8 pb-20">
       {/* Hero Section with AI Barista */}
       <section className="bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-50"></div>
         
-        <div className="p-8 md:p-12 relative z-10">
-          <div className="flex flex-col md:flex-row gap-8 items-center">
-            <div className="flex-1 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm font-medium">
-                <Sparkles className="w-4 h-4" />
+        <div className="p-6 md:p-12 relative z-10">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center">
+            <div className="flex-1 space-y-4 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs md:text-sm font-medium">
+                <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
                 <span>您的专属 AI 咖啡师已上线</span>
               </div>
-              <h1 className="text-4xl font-bold text-gray-900 leading-tight">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
                 欢迎光临 <span className="text-amber-600">아아咖啡厅</span>
               </h1>
-              <p className="text-lg text-gray-600">
+              <p className="text-base md:text-lg text-gray-600">
                 "您好！今天想喝点什么？我是您的 AI 咖啡师。我可以根据您的口味（水平）为您调制专属的朝鲜语学习计划。"
               </p>
               
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-wrap gap-4 pt-2 justify-center md:justify-start">
                 <Link 
                   to="/typing"
                   className="flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors shadow-lg shadow-gray-200"
@@ -38,6 +41,7 @@ const Home: React.FC = () => {
             </div>
             
             {/* Barista Illustration Placeholder */}
+            {!isMobile && (
             <div className="w-full md:w-1/3 flex justify-center">
               <div className="relative w-48 h-48 bg-amber-100 rounded-full flex items-center justify-center border-4 border-white shadow-xl">
                 <span className="text-6xl">🦙☕</span>
@@ -46,25 +50,26 @@ const Home: React.FC = () => {
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* Menu Board (Features) */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <Link 
           to="/typing"
-          className="group relative overflow-hidden bg-white rounded-xl p-6 border border-amber-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
+          className="group relative overflow-hidden bg-white rounded-xl p-5 md:p-6 border border-amber-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
         >
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Coffee className="w-32 h-32 text-amber-900" />
+            <Coffee className="w-24 h-24 md:w-32 md:h-32 text-amber-900" />
           </div>
           <div className="relative z-10">
-            <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center text-amber-700 mb-4 group-hover:scale-110 transition-transform">
-              <Coffee className="w-6 h-6" />
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-100 rounded-lg flex items-center justify-center text-amber-700 mb-3 md:mb-4 group-hover:scale-110 transition-transform">
+              <Coffee className="w-5 h-5 md:w-6 md:h-6" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">每日特调 (打字练习)</h3>
-            <p className="text-gray-500 mb-4">
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1 md:mb-2">每日特调 (打字练习)</h3>
+            <p className="text-sm md:text-base text-gray-500 mb-3 md:mb-4">
               像品尝一杯冰美式(아아)一样清爽。AI 咖啡师为您挑选最适合的练习文本，生成详细的“品鉴报告”。
             </p>
             <div className="flex items-center text-amber-600 font-medium text-sm">
@@ -75,17 +80,17 @@ const Home: React.FC = () => {
 
         <Link 
           to="/grammar"
-          className="group relative overflow-hidden bg-white rounded-xl p-6 border border-amber-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
+          className="group relative overflow-hidden bg-white rounded-xl p-5 md:p-6 border border-amber-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
         >
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Book className="w-32 h-32 text-amber-900" />
+            <Book className="w-24 h-24 md:w-32 md:h-32 text-amber-900" />
           </div>
           <div className="relative z-10">
-            <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center text-amber-700 mb-4 group-hover:scale-110 transition-transform">
-              <Book className="w-6 h-6" />
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-100 rounded-lg flex items-center justify-center text-amber-700 mb-3 md:mb-4 group-hover:scale-110 transition-transform">
+              <Book className="w-5 h-5 md:w-6 md:h-6" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">研读时光 (语法学习)</h3>
-            <p className="text-gray-500 mb-4">
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1 md:mb-2">研读时光 (语法学习)</h3>
+            <p className="text-sm md:text-base text-gray-500 mb-3 md:mb-4">
               在咖啡香气中静心学习。系统化整理语法知识点，配合 AI 智能纠错，如同私教在旁指导。
             </p>
             <div className="flex items-center text-amber-600 font-medium text-sm">
@@ -96,18 +101,18 @@ const Home: React.FC = () => {
       </div>
 
       {/* Progress & Recommendations */}
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Recommended Menu */}
         <section className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <h2 className="text-lg md:text-xl font-bold text-gray-900 flex items-center gap-2">
               <Star className="w-5 h-5 text-amber-500" />
               咖啡师推荐 Menu
             </h2>
-            <Link to="/typing" className="text-sm text-amber-600 hover:text-amber-700 font-medium">查看完整菜单</Link>
+            <Link to="/typing" className="text-xs md:text-sm text-amber-600 hover:text-amber-700 font-medium">查看完整菜单</Link>
           </div>
           
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
             <Link 
               to="/typing?genre=idioms&difficulty=sugar-100"
               className="bg-white p-4 rounded-xl border border-amber-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group block"
@@ -119,7 +124,7 @@ const Home: React.FC = () => {
                 <span className="text-xs text-gray-400">甜度(难度): 60%</span>
               </div>
               <h3 className="font-bold text-gray-900 mb-1 group-hover:text-amber-700 transition-colors">韩国人的智慧</h3>
-              <p className="text-sm text-gray-500 line-clamp-2">
+              <p className="text-xs md:text-sm text-gray-500 line-clamp-2">
                 学习 "灯下黑"、"积少成多" 等地道俗语，像韩国人一样思考。
               </p>
             </Link>
@@ -135,7 +140,7 @@ const Home: React.FC = () => {
                 <span className="text-xs text-gray-400">甜度(难度): 80%</span>
               </div>
               <h3 className="font-bold text-gray-900 mb-1 group-hover:text-amber-700 transition-colors">金素月 - 金达莱花</h3>
-              <p className="text-sm text-gray-500 line-clamp-2">
+              <p className="text-xs md:text-sm text-gray-500 line-clamp-2">
                 沉浸在韩国现代诗歌的优美意境中，提升文学素养。
               </p>
             </Link>
@@ -151,7 +156,7 @@ const Home: React.FC = () => {
                 <span className="text-xs text-gray-400">甜度(难度): 45%</span>
               </div>
               <h3 className="font-bold text-gray-900 mb-1 group-hover:text-amber-700 transition-colors">名台词中的语法</h3>
-              <p className="text-sm text-gray-500 line-clamp-2">
+              <p className="text-xs md:text-sm text-gray-500 line-clamp-2">
                 学习 "-잖아", "-구나" 等地道口语，像韩剧主角一样表达情感。
               </p>
             </Link>
@@ -167,7 +172,7 @@ const Home: React.FC = () => {
                 <span className="text-xs text-gray-400">甜度(难度): 95%</span>
               </div>
               <h3 className="font-bold text-gray-900 mb-1 group-hover:text-amber-700 transition-colors">高级逻辑表达</h3>
-              <p className="text-sm text-gray-500 line-clamp-2">
+              <p className="text-xs md:text-sm text-gray-500 line-clamp-2">
                 学习 "-을 리가 없다", "-는 커녕" 等高级语法，表达细腻情感。
               </p>
             </Link>
@@ -175,10 +180,10 @@ const Home: React.FC = () => {
         </section>
 
         {/* Loyalty Card (Progress) */}
-        <section className="bg-white rounded-xl shadow-sm border border-amber-100 p-6 relative overflow-hidden">
+        <section className="bg-white rounded-xl shadow-sm border border-amber-100 p-5 md:p-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-full -translate-y-1/2 translate-x-1/2"></div>
           
-          <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
             <Clock className="w-5 h-5 text-amber-500" />
             会员积分卡
           </h2>
