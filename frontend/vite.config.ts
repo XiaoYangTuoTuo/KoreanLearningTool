@@ -4,41 +4,20 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { traeBadgePlugin } from 'vite-plugin-trae-solo-badge';
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: '/', // 回滚为根路径，这是最标准的 Cloudflare Pages 配置
+export default defineConfig(({ mode }) => ({
+  base: '/',
   build: {
-    sourcemap: 'hidden',
-    chunkSizeWarningLimit: 1000, // 提高警告阈值
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            // Core React libraries
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-              return 'vendor-react';
-            }
-            // Heavy libraries
-            if (id.includes('recharts')) {
-              return 'vendor-charts';
-            }
-            if (id.includes('framer-motion')) {
-              return 'vendor-framer';
-            }
-            if (id.includes('lucide-react')) {
-              return 'vendor-icons';
-            }
-            // Other third-party libraries
-            return 'vendor-libs';
-          }
-        }
-      }
-    }
+    sourcemap: true, // Enable sourcemap for debugging
+    minify: false,   // Disable minify to see readable errors
+    chunkSizeWarningLimit: 1000,
+    // Remove manualChunks to rely on Vite's default splitting and avoid circular dependency issues
   },
   plugins: [
     react({
       babel: {
         plugins: [
-          'react-dev-locator',
+          // Only use react-dev-locator in development
+          ...(mode === 'development' ? ['react-dev-locator'] : []),
         ],
       },
     }),
@@ -53,4 +32,4 @@ export default defineConfig({
     }), 
     tsconfigPaths()
   ],
-})
+}))
