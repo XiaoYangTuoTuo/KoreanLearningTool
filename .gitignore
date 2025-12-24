@@ -1,0 +1,13 @@
+# General
+.DS_Store
+.vscode
+.idea
+*.log
+
+# Dependencies
+node_modules
+dist
+build
+
+# OS
+Thumbs.db
