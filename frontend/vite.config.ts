@@ -7,10 +7,9 @@ import { traeBadgePlugin } from 'vite-plugin-trae-solo-badge';
 export default defineConfig(({ mode }) => ({
   base: '/',
   build: {
-    sourcemap: true, // Enable sourcemap for debugging
-    minify: false,   // Disable minify to see readable errors
+    sourcemap: false, // Disable sourcemap for production
+    minify: true,     // Re-enable minify for performance
     chunkSizeWarningLimit: 1000,
-    // Remove manualChunks to rely on Vite's default splitting and avoid circular dependency issues
   },
   plugins: [
     react({
