@@ -30,7 +30,7 @@ const App: React.FC = () => {
           </Route>
         </Routes>
       </Suspense>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
