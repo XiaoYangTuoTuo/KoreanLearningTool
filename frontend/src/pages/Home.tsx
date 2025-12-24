@@ -20,7 +20,7 @@ const Home: React.FC = () => {
                 <span>您的专属 AI 咖啡师已上线</span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-                欢迎光临 <span className="text-amber-600">아아咖啡厅</span>
+                欢迎光临 <span className="text-amber-600">아아咖啡厅，小蛋大人</span>
               </h1>
               <p className="text-base md:text-lg text-gray-600">
                 "您好！今天想喝点什么？我是您的 AI 咖啡师。我可以根据您的口味（水平）为您调制专属的朝鲜语学习计划。"
