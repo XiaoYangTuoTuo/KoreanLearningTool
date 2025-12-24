@@ -8,6 +8,15 @@ export default defineConfig({
   base: './', // 关键配置：确保资源路径为相对路径，适配 Gitee Pages 非根目录部署
   build: {
     sourcemap: 'hidden',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
+          charts: ['recharts'],
+          utils: ['date-fns', 'lucide-react', 'clsx', 'tailwind-merge']
+        }
+      }
+    }
   },
   plugins: [
     react({
