@@ -5,7 +5,7 @@ import { traeBadgePlugin } from 'vite-plugin-trae-solo-badge';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './', // 修改为相对路径，适配 HashRouter 和任意子目录部署
+  base: '/', // 回滚为根路径，这是最标准的 Cloudflare Pages 配置
   build: {
     sourcemap: 'hidden',
     chunkSizeWarningLimit: 1000, // 提高警告阈值
