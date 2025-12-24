@@ -133,48 +133,48 @@ const Profile: React.FC = () => {
   const calendarDays = Array.from({ length: 140 }, (_, i) => subDays(today, 139 - i)); // Last ~5 months
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-4 md:space-y-8 pb-20 md:pb-0">
       {/* User Info Header (Member Card Style) */}
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-6 md:p-8 text-amber-50 shadow-xl border border-gray-700 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-5 md:p-8 text-amber-50 shadow-xl border border-gray-700 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500 rounded-full blur-3xl opacity-10 -translate-y-1/2 translate-x-1/2"></div>
         
         <div className="relative z-10">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-6">
-              <div className="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center text-3xl font-bold text-gray-900 border-4 border-gray-800 shadow-lg">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 text-center md:text-left w-full md:w-auto">
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-amber-500 rounded-full flex items-center justify-center text-3xl font-bold text-gray-900 border-4 border-gray-800 shadow-lg flex-shrink-0">
                  {profile.avatar.includes('http') ? (
                     <img src={profile.avatar} alt="avatar" className="w-full h-full rounded-full object-cover" />
                   ) : (
                     <span>{profile.avatar}</span>
                   )}
               </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-2 text-white flex items-center gap-2">
+              <div className="flex-1">
+                <h1 className="text-2xl font-bold mb-2 text-white flex items-center justify-center md:justify-start gap-2">
                   {profile.username}
                   <button onClick={() => setIsEditModalOpen(true)} className="text-gray-400 hover:text-white transition-colors">
                     <Edit2 className="w-4 h-4" />
                   </button>
                 </h1>
-                <p className="text-gray-400 text-sm mb-3">{profile.bio}</p>
-                <div className="flex items-center gap-4 text-gray-400 text-sm">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" /> 注册日期 {format(joinDate, 'yyyy-MM-dd')}
+                <p className="text-gray-400 text-sm mb-3 line-clamp-2">{profile.bio}</p>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-gray-400 text-sm">
+                  <span className="flex items-center gap-1 bg-gray-800/50 px-2 py-1 rounded">
+                    <Calendar className="w-3.5 h-3.5" /> {format(joinDate, 'yyyy-MM-dd')}
                   </span>
-                  <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-900/50 text-amber-400 rounded border border-amber-900/50">
-                    <Award className="w-4 h-4" /> Level {level} (积分: {points})
+                  <span className="flex items-center gap-1 px-2 py-1 bg-amber-900/50 text-amber-400 rounded border border-amber-900/50">
+                    <Award className="w-3.5 h-3.5" /> Lv.{level} ({points} pts)
                   </span>
                 </div>
               </div>
             </div>
             <button 
               onClick={() => setActiveTab('settings')}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-400 hover:text-white"
+              className="absolute top-4 right-4 md:static p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-400 hover:text-white"
             >
               <Settings className="w-6 h-6" />
             </button>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-8 pt-8 border-t border-gray-700/50">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-6 md:mt-8 pt-6 md:pt-8 border-t border-gray-700/50">
             <div>
               <p className="text-gray-400 text-sm mb-1">品鉴时长 (估算)</p>
               <p className="text-2xl font-bold text-amber-400">{totalHours} <span className="text-sm font-normal text-gray-500">小时</span></p>
@@ -199,41 +199,41 @@ const Profile: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl w-fit">
+      <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl w-full md:w-fit overflow-x-auto no-scrollbar">
         <button
           onClick={() => setActiveTab('overview')}
           className={clsx(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2",
+            "flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap",
             activeTab === 'overview' ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-900"
           )}
         >
           <TrendingUp className="w-4 h-4" />
-          概览 & 统计
+          概览
         </button>
         <button
           onClick={() => setActiveTab('history')}
           className={clsx(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap",
+            "flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap",
             activeTab === 'history' ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-900"
           )}
         >
           <History className="w-4 h-4" />
-          详细记录表
+          历史
         </button>
         <button
           onClick={() => setActiveTab('settings')}
           className={clsx(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2",
+            "flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap",
             activeTab === 'settings' ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-900"
           )}
         >
           <Settings className="w-4 h-4" />
-          设置与数据
+          设置
         </button>
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             
@@ -354,8 +354,8 @@ const Profile: React.FC = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-amber-100 p-6">
+          <div className="space-y-4 md:space-y-6">
+            <div className="bg-white rounded-xl shadow-sm border border-amber-100 p-4 md:p-6">
               <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-6">
                 <AlertTriangle className="w-5 h-5 text-orange-500" />
                 口味调整建议 (错题本)
@@ -405,7 +405,7 @@ const Profile: React.FC = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-amber-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-amber-100 p-4 md:p-6">
               <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-6">
                 <BookOpen className="w-5 h-5 text-purple-500" />
                 推荐学习
@@ -477,9 +477,9 @@ const Profile: React.FC = () => {
         </div>
       ) : (
         // Settings Tab
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-8">
           {/* General Settings */}
-          <div className="bg-white rounded-xl shadow-sm border border-amber-100 p-6 space-y-6">
+          <div className="bg-white rounded-xl shadow-sm border border-amber-100 p-4 md:p-6 space-y-6">
             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b pb-4">
               <Settings className="w-5 h-5 text-gray-500" />
               偏好设置
