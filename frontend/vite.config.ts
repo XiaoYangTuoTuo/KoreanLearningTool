@@ -8,12 +8,28 @@ export default defineConfig({
   base: './', // 关键配置：确保资源路径为相对路径，适配 Gitee Pages 非根目录部署
   build: {
     sourcemap: 'hidden',
+    chunkSizeWarningLimit: 1000, // 提高警告阈值
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
-          charts: ['recharts'],
-          utils: ['date-fns', 'lucide-react', 'clsx', 'tailwind-merge']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            // Core React libraries
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor-react';
+            }
+            // Heavy libraries
+            if (id.includes('recharts')) {
+              return 'vendor-charts';
+            }
+            if (id.includes('framer-motion')) {
+              return 'vendor-framer';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            // Other third-party libraries
+            return 'vendor-libs';
+          }
         }
       }
     }
